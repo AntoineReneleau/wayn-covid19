@@ -1,0 +1,284 @@
+@font-face {
+    font-family: Averta;
+    src: url('/static/fonts/Averta\ Regular.otf') format('otf'), url('/static/fonts/Averta\ Regular.ttf') format('ttf'), url('/static/fonts/Averta\ Regular.woff') format('woff');
+    font-weight: normal;
+    font-s: normal;
+}
+
+@font-face {
+    font-family: Averta-Bold;
+    src: url('/static/fonts/Averta\ Bold.otf') format('otf'), url('/static/fonts/Averta\ Bold.ttf') format('ttf'), url('/static/fonts/Averta\ Bold.woff') format('woff');
+    font-weight: normal;
+    font-s: normal;
+}
+
+@font-face {
+    font-family: GTSectraDisplayTrial-Super;
+    src: url('/static/fonts/GT.TTF') format('ttf'), url('/static/fonts/GT.WOF') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ------------------------------------------------------ */
+
+html {
+    margin: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+    font-family: Averta;
+    --dark-grey: #333333;
+    --off-white: #f7f5f0;
+    --pastel-red: #f6443d;
+    --military-green: #6e7847;
+    --mango: #feb523;
+    --dark-blue-grey: #143931;
+    --camo: #849055;
+    --blue: #0343d5;
+    --cement: #989993;
+}
+
+/* ------------------------------------------------------ */
+
+/* Text styles */
+
+h1 {
+    font-family: Averta-Bold;
+    font-size: 66px;
+    font-weight: 900;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.03;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--dark-blue-grey);
+}
+
+h2 {
+    font-family: GTSectraDisplayTrial-Super;
+    font-size: 43px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--mango);
+}
+
+h3 {
+    font-family: Averta;
+    font-size: 31px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.13;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--dark-blue-grey);
+}
+
+h6 {
+    font-family: Averta;
+    font-size: 31px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.29;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--off-white);
+}
+
+h4 {
+    font-family: GTSectraDisplayTrial;
+    font-size: 20px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 6.3px;
+    text-align: center;
+    color: var(--pastel-red);
+}
+
+h5 {
+    font-family: GTSectraDisplayTrial-Super;
+    font-size: 30px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: var(--mango);
+}
+
+p {
+    font-family: Averta;
+    font-size: 17px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.29;
+    letter-spacing: normal;
+    color: #ffffff;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 15px 20px;
+    font-size: 17px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.06;
+    letter-spacing: normal;
+    text-align: center;
+    border: 2px solid var(--dark-blue-grey);
+    border-radius: 15px;
+    color: var(--dark-blue-grey);
+    transition: all 0.5s ease;
+}
+
+.btn:hover {
+    background-color: var(--dark-blue-grey);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 45px;
+        font-weight: 900;
+        line-height: 1.33;
+        letter-spacing: normal;
+        color: var(--dark-blue-grey);
+    }
+    h2 {
+        font-size: 30px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.9;
+        letter-spacing: normal;
+        text-align: center;
+        color: var(--mango);
+    }
+    h3 {
+        font-size: 25px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.4;
+        letter-spacing: normal;
+        text-align: center;
+        color: var(--dark-blue-grey);
+        text-decoration: uppercase;
+    }
+    h4 {
+        font-size: 15px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 4.73px;
+        text-align: center;
+        color: var(--pastel-red);
+    }
+    h6 {
+        font-size: 25px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.6;
+        letter-spacing: normal;
+        text-align: center;
+        color: var(--off-white);
+    }
+    p {
+        font-size: 17px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.29;
+        letter-spacing: normal;
+        color: var(--dark-grey);
+    }
+    /* .btn { */
+    /* padding: 10px 15px; */
+    /* font-size: 13px; */
+    /* } */
+}
+
+/* @media (max-width: 768px) {
+    .summary-container {
+        z-index: 10000;
+    }
+} */
+
+.snip-layout .snip-header__title {
+    font-family: Averta-Bold;
+    color: var(--mango);
+}
+
+.snip-layout .snip-header, .snip-layout .snip-footer {
+    background: var(--dark-blue-grey);
+}
+
+.snip-layout .snip-btn {
+    border: 2px solid var(--dark-blue-grey);
+    border-radius: 15px;
+    background: transparent;
+    transition: all 0.5s ease;
+    color: var(--dark-grey);
+}
+
+.snip-layout .snip-btn:hover {
+    color: white;
+    background: var(--dark-blue-grey);
+}
+
+.snip-layout .snip-table td, .snip-layout .snip-table th, .snip-layout .snip-table tr {
+    font-family: Averta-Bold;
+    color: var(--dark-grey);
+}
+
+.snip-layout .snip-product__description, .snip-layout .snip-product__name {
+    color: var(--dark-blue-grey);
+}
+
+.snip-layout .snip-step__label {
+    font-family: Averta-Bold;
+    color: var(--dark-grey);
+}
+
+.summary-container {
+    position: absolute;
+    top: 70px;
+    right: 70px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.total-items {
+    margin-left: -30%;
+    font-family: Averta;
+    font-size: 17px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: var(--mango);
+}
+
+@media (max-width: 769px) {
+    .summary-container {
+        bottom: 0;
+    }
+}

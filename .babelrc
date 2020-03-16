@@ -1,0 +1,17 @@
+{
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./"],
+      "alias": {
+        "test": "./test",
+        "Components": "./components",
+        "Static": "./static",
+        "~": ".",
+      }
+    }]
+  ],
+  "presets": [
+          "@babel/preset-env",
+          "next/babel"
+        ]
+}
