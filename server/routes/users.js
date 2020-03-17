@@ -9,20 +9,20 @@ Airtable.configure({
     apiKey: process.env.AIRTABLE_API_KEY
 });
 var base = Airtable.base(process.env.AIRTABLE_BASE);
+var humanRessources = {};
 
-base('Users').select({
-    // Selecting the first 3 records in Grid view:
-    maxRecords: 300,
+base('Ressources humaines').select({
+    // Selecting the 3 only records in Grid view:
+    maxRecords: 3,
     view: "Grid view"
 }).eachPage(function page(records, fetchNextPage) {
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function (record) {
-        // console.log('Retrieved', record.get('Référence'));
-        // console.log(record.get('Style monture'));
-        const Name = record.get('Name');
-        const Fonction = record.get('Fonction');
-        const Mail = record.get('Mail');
+        const branch1 = record.get('Branche1');
+        const branch2 = record.get('Branche2: Expérience / Capable de');
+
+        humanRessources[branch1] = branch2
 
         // Users.create({ Name, Fonction, Mail })
         //   .then(console.log("created element in the database")
@@ -30,6 +30,10 @@ base('Users').select({
         //   .catch(err => next(err));
 
     });
+
+    // console.log("")
+    // console.log("Debug: Fetch ressources from Airtable")
+    // console.log( humanRessources)
 
     // To fetch the next page of records, call `fetchNextPage`.
     // If there are more records, `page` will get called again.
@@ -41,6 +45,31 @@ base('Users').select({
     if (err) { console.error(err); return; }
 });
 
+
+router.get("/ressources", (req, res, next) => {
+    // Send back ressources found on Airtable
+    // console.log()
+    // console.log("Debug: Server-side")
+    // console.log("Ressources requested")
+    // console.log(humanRessources)
+    res.json(humanRessources)
+    //
+    next()
+});
+
+router.post("/whereto", (req, res, next) => {
+    // Send back ressources found on Airtable
+    console.log()
+    console.log("Debug: Server-side")
+    console.log("Where to requested")
+    //
+    request      = req.body
+    request.data = null
+    console.log(request)
+    res.json(["Stay home", "Nowhere"])
+    //
+    next()
+});
 
 router.post("/users", (req, res, next) => {
     // Users.find()
