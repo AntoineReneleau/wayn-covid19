@@ -6,10 +6,12 @@ class mainPage extends Component {
         super(props);
      
         this.state = {
-            data:              {},
+            data  :            {},
+            skills:            {},
             roleSelection:     -1,
             skillsSelection:   [],
             location:          "",
+            requestProcessed:  false,
             listOfSuggestions: [],
         };
     }
@@ -29,7 +31,8 @@ class mainPage extends Component {
             .then(r =>  r.json().then(data => ({status: r.status, body: data})))
             .then(response => {
                 this.setState({
-                    data: response.body
+                    data  : response.body.humanRessources,
+                    skills: response.body.skills
                 });
             })
             .catch(err => console.log("Problem in fetching data from API", err));
@@ -50,6 +53,7 @@ class mainPage extends Component {
             roleSelection:     index,
             skillsSelection:   skillsBool,
             location:          this.state.location,
+            requestProcessed:  this.state.requestProcessed,
             listOfSuggestions: this.state.listOfSuggestions
         })
 
@@ -61,7 +65,6 @@ class mainPage extends Component {
             skillsSelection: skills,
             ...this.state
         })
-        console.log(skills)
     }
 
     updateElement(event) {
@@ -70,9 +73,6 @@ class mainPage extends Component {
     }
 
     handleSubmit(event) {
-        console.log("Debug: handleSubmit")
-        console.log(this.state)
-
         event.preventDefault();
         const rawResponse = fetch(`${process.env.API_URL}/whereto`, {
             method: "POST",
@@ -82,25 +82,21 @@ class mainPage extends Component {
             },
             body: JSON.stringify(this.state)
         })
+            .then(r =>  r.json().then(data => ({status: r.status, body: data})))
             .then(response => {
-                console.log(response)
-                // this.setState({
-                //     feedbackMessage:
-                //         "Nous vous remercions de votre message, une personne de l'équipe prendra contact avec vous dans les meilleurs délais.",
-                //     firstName: "",
-                //     fonction: "",
-                //     email: "",
-                //     message: "",
-                // });
+                this.setState({
+                    requestProcessed : true,
+                    listOfSuggestions: response.body
+                });
             })
-            .catch(err => console.log("HandleSubmit pb", err));
+            .catch(err => console.log("Problem in processing request", err));
     }
 
     render() {
 
-        const { data, location, roleSelection, skillsSelection } = this.state;
-        const roles   = Object.keys(data);
-        const feedbackMessage    = "TOTO"
+        const { data, skills, location, roleSelection, skillsSelection } = this.state;
+        const roles       = Object.keys(data);
+        const skills_keys = Object.keys(skills);
 
         return (
             <React.Fragment>
@@ -142,6 +138,25 @@ class mainPage extends Component {
                                             </div>
                                     })}
 
+                                    <Label>Plus précisément:</Label>
+                                    {skills_keys.map( (value, index) => {
+                                        return <div key={index}>
+                                            <label>{value}</label>
+                                            {skills[value].map( (value2, index2)=> {
+                                                return <div key={index2}>
+                                                    <input
+                                                        type="checkbox"
+                                                        name="branch2"
+                                                        checked={skillsSelection[index]}
+                                                        onChange={ e=> this.updateSkills(skillsSelection, index) }
+                                                    />
+                                                    <label>{value2}</label>
+                                                </div>
+                                            })
+                                            }
+                                            </div>
+                                    })}
+
                                     <Label>Position approximative:</Label>
 
                                     <ContactInput
@@ -157,10 +172,22 @@ class mainPage extends Component {
                                 <button type="submit" className="btn btn-mail">
                                     Où devrais-je me rendre?
                                     </button>
-                                {feedbackMessage && (
+                                {this.state.requestProcessed && (
+                                    this.state.listOfSuggestions.length==0 ? 
+                                    // Either no suggestion found
+                                    <div>
                                     <h5 className="success-message">
-                                        {feedbackMessage}
+                                    Désolé. Nous ne référençons aucune demande en urgence qui requiert votre attention.
                                     </h5>
+                                    <h5 className="success-message">
+                                    Vous pouvez remplir le formulaire de recensement.
+                                    </h5>
+                                    </div>
+                                    :
+                                    // Or use a mapping of the list found
+                                    this.state.listOfSuggestions.map( (value, index) => {
+                                        return JSON.stringify(value)
+                                    })
                                 )}
                             </ContactForm>
                         </Section2>
