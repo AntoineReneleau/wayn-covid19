@@ -46,7 +46,7 @@ class mainPage extends Component {
 
                 let skills = response.body.skills
                 let skillsSelection = {}
-                for(let key in skills){
+                for (let key in skills) {
                     let value = skills[key]
                     skillsSelection[key] = new Array(value.length).fill(false)
                 }
@@ -170,7 +170,7 @@ class mainPage extends Component {
                                 <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} >
                                     <Label>Mes compétences</Label>
                                     {skills_keys.map((value, index) => {
-                                        return <div key={index}>
+                                        return <Block key={index}>
                                             <SecondaryLabel>{value}</SecondaryLabel>
                                             {skills[value].map((value2, index2) => {
                                                 return <CheckboxContanier key={index2}>
@@ -183,7 +183,7 @@ class mainPage extends Component {
                                                 </CheckboxContanier>
                                             })
                                             }
-                                        </div>
+                                        </Block>
                                     })}
                                 </Displayer>
 
@@ -269,7 +269,7 @@ color: white;
 
 const SplashText = styled.h5`
 width: 80%;
-color: black;
+color: #0b6ba8;
 text-align: center;
 `
 
@@ -314,10 +314,11 @@ margin-bottom: 30px;
 `
 
 const BoxChoice = styled.div`
-width: 220px;
-height: 220px;
+width: 240px;
+height: 240px;
+padding: 10px;
 border: 3px solid var(--bleu-officiel);
-color: ${props => props.border ? "white" : "black"};
+color: ${props => props.border ? "white" : "var(--bleu-officiel)"};
 background-color:  ${props => props.border ? "var(--bleu-officiel)" : "white"};
 display: flex;
 justify-content: center;
@@ -338,27 +339,35 @@ letter-spacing: normal;
 
 const Displayer = styled.div`
 width: 100%;
-border: 2px solid var(--bleu-officiel);
+border: 2px solid #ccc;
 padding: 40px;
-border-radius: 10px;
+background-color: #f2f6faad;
+border-radius: 5px;
 margin-top: 30px;
 `
 
 // ---------------------------------------------------
 // ---------------------------------------------------
 
+const Block = styled.div`
+border: 1px solid #ccc;
+padding: 20px;
+margin-bottom: 20px;
+background-color: white;
+`
+
+
 const Label = styled.h3`
 text-align: left;
-margin: 15px 0;
-color: black;
+margin: 15px 0 30px;
+color: #0b6ba8;
 font-weight: bold;
 `
 
 const SecondaryLabel = styled.h3`
 text-align: left;
-font-family: Averta-Bold;
 font-size: 17px;
-font-weight: normal;
+font-weight: 600;
 font-style: normal;
 font-stretch: normal;
 line-height: 1.29;
@@ -401,5 +410,4 @@ margin-left: 10px;
 const CheckboxContanier = styled.div`
 display: flex;
 margin: 5px;
-background-color: #f2f6fa;
 `
