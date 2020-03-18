@@ -136,9 +136,18 @@ class mainPage extends Component {
                         <ContactForm onSubmit={event => this.handleSubmit(event)}>
                             <ContactFormWrapper>
                                 <ChoiceContainer>
-                                    <BoxChoice border={this.state.Profession == 'Médical'} onClick={() => this.setState({ Profession: 'Médical' })} >Je suis <br /> professionnel médical</BoxChoice>
-                                    <BoxChoice border={this.state.Profession == 'Paramédical'} onClick={() => this.setState({ Profession: 'Paramédical' })}>Je suis <br /> professionnel paramédical</BoxChoice>
-                                    <BoxChoice border={this.state.Profession == 'Autre'} onClick={() => this.setState({ Profession: 'Autre' })} >Je suis <br /> professionnel autre</BoxChoice>
+                                    <BoxChoice
+                                        border={this.state.Profession == 'Médical'}
+                                        onClick={() => this.setState({ Profession: 'Médical' })}>Je suis <br /> professionnel médical</BoxChoice>
+                                    <BoxChoice
+                                        border={this.state.Profession == 'Paramédical'}
+                                        onClick={() => this.setState({ Profession: 'Paramédical' })}>Je suis <br /> professionnel paramédical</BoxChoice>
+                                    <BoxChoice
+                                        border={this.state.Profession == 'Autre'}
+                                        onClick={() => this.setState({ Profession: 'Autre' })} >Je suis <br /> professionnel autre</BoxChoice>
+
+                                    {this.state.displayMobile && this.state.Profession == 'Médical' && <Image src="/static/images/down.png" alt="down" />}
+
                                 </ChoiceContainer>
 
                                 {/* <Label>Vous êtes ici en tant que:</Label>
@@ -265,12 +274,16 @@ const HeroTitle = styled.h3`
 width: 80%;
 margin: 20px;
 color: white;
+
 `
 
 const SplashText = styled.h5`
 width: 80%;
 color: #0b6ba8;
 text-align: center;
+@media (max-width: 768px){
+    font-size: 20px;
+}
 `
 
 
@@ -285,6 +298,7 @@ flex-direction: column;
 align-items: center;
 @media (max-width: 768px){
 width: 100%;
+margin-top: 20px;
 }
 `
 
@@ -315,6 +329,13 @@ const ChoiceContainer = styled.div`
 display: flex;
 justify-content: space-evenly;
 margin-bottom: 30px;
+@media (max-width: 768px){
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+margin: 0px;
+
+}
 `
 
 const BoxChoice = styled.div`
@@ -337,8 +358,15 @@ font-stretch: normal;
 line-height: 1.29;
 letter-spacing: normal;
 @media (max-width: 768px){
-height: 200px;
+height: 100px;
+width: 95%;
+margin-bottom: 10px;
 }
+`
+
+const Image = styled.img`
+width: 50px;
+color: var(--bleu-officiel);
 `
 
 // ---------------------------------------------------
