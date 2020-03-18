@@ -43,9 +43,17 @@ class mainPage extends Component {
         })
             .then(r => r.json().then(data => ({ status: r.status, body: data })))
             .then(response => {
+
+                let skills = response.body.skills
+                let skillsSelection = {}
+                for(let key in skills){
+                    let value = skills[key]
+                    skillsSelection[key] = new Array(value.length).fill(false)
+                }
                 this.setState({
                     data: response.body.humanRessources,
-                    skills: response.body.skills
+                    skills: skills,
+                    skillsSelection: skillsSelection
                 });
             })
             .catch(err => console.log("Problem in fetching data from API", err));
@@ -55,28 +63,30 @@ class mainPage extends Component {
         this.setState({ displayMobile: window.innerWidth <= 760 });
     }
 
-    updateRole(event, index) {
-        event.preventDefault();
-        const dataKeys = Object.keys(this.state.data);
-        const selectedKey = dataKeys[index]
-        const skills = this.state.data[selectedKey]
-        const skillsBool = new Array(skills.length).fill(false)
-        this.setState({
-            data: this.state.data,
-            roleSelection: index,
-            skillsSelection: skillsBool,
-            location: this.state.location,
-            requestProcessed: this.state.requestProcessed,
-            listOfSuggestions: this.state.listOfSuggestions
-        })
-    }
+    // updateRole(event, index) {
+    //     event.preventDefault();
+    //     const dataKeys = Object.keys(this.state.data);
+    //     const selectedKey = dataKeys[index]
+    //     const skills = this.state.data[selectedKey]
+    //     const skillsBool = new Array(skills.length).fill(false)
 
-    updateSkills(skills, index) {
-        event.preventDefault();
+    //     this.setState({
+    //         data: this.state.data,
+    //         roleSelection: index,
+    //         skillsSelection: skillsBool,
+    //         location: this.state.location,
+    //         requestProcessed: this.state.requestProcessed,
+    //         listOfSuggestions: this.state.listOfSuggestions
+    //     })
+    // }
 
-        skills[index] = !skills[index]
+    updateSkills(event, value, index) {
+        event.preventDefault();
+        // Changing state requires a copy
+        let skillsSelection = Object.assign({}, this.state.skillsSelection)
+        skillsSelection[value][index] = !skillsSelection[value][index]
         this.setState({
-            skillsSelection: skills,
+            skillsSelection: skillsSelection,
             ...this.state
         })
     }
@@ -158,8 +168,6 @@ class mainPage extends Component {
                                     })} */}
 
                                 <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} >
-
-
                                     <Label>Mes compétences</Label>
                                     {skills_keys.map((value, index) => {
                                         return <div key={index}>
@@ -168,8 +176,8 @@ class mainPage extends Component {
                                                 return <CheckboxContanier key={index2}>
                                                     <Checkbox
                                                         name="branch2"
-                                                        checked={skillsSelection[index]}
-                                                        onChange={e => this.updateSkills(skillsSelection, index)}
+                                                        checked={skillsSelection[value][index2]}
+                                                        onChange={e => this.updateSkills(e, value, index2)}
                                                     />
                                                     <CheckboxLabel>{value2}</CheckboxLabel>
                                                 </CheckboxContanier>
@@ -178,8 +186,8 @@ class mainPage extends Component {
                                         </div>
                                     })}
                                 </Displayer>
-                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }}>
 
+                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }}>
                                     <Label>Position approximative:</Label>
                                     <ContactInput
                                         type="text"
@@ -190,7 +198,6 @@ class mainPage extends Component {
                                         onChange={event => this.updateElement(event)}
                                     />
                                 </Displayer>
-
 
 
                                 <button style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} type="submit" className="btn btn-mail">
@@ -213,7 +220,6 @@ class mainPage extends Component {
                                             return JSON.stringify(value)
                                         })
                                 )}
-
 
                             </ContactFormWrapper>
                         </ContactForm>
