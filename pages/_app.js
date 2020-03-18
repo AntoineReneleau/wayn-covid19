@@ -33,6 +33,8 @@ export default (withRouter(
 				<Container>
 					<Head>
 						<link href="/static/css/global-styles.css" rel="stylesheet" />
+						<link href="/static/css/antd.css" rel="stylesheet" />
+						<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"></link>
 					</Head>
 					<ThemeProvider theme={theme}>
 						<Component router={router} {...pageProps} />

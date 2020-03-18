@@ -1,17 +1,30 @@
 import React, { Component } from 'react';
 import styled from "styled-components";
+import { Checkbox } from 'antd';
+
+const Job = [
+    'Anesthésiste-réanimateur exerçant en réanimation médicale',
+    'Cardiologue/pneumologue en USIC',
+    'Autre spécialité exerçant en USC',
+    'Cardiologue (exerçant en service conventionnel)',
+    'Pneumologue (exerçant en service conventionnel)',
+    'Infectiologue',
+    'Médecin généraliste',
+    'Autre spécialité en service conventionnel ou ambulatoire'
+]
+
 
 class mainPage extends Component {
     constructor(props) {
         super(props);
-     
+
         this.state = {
-            data  :            {},
-            skills:            {},
-            roleSelection:     -1,
-            skillsSelection:   [],
-            location:          "",
-            requestProcessed:  false,
+            data: {},
+            skills: {},
+            roleSelection: -1,
+            skillsSelection: [],
+            location: "",
+            requestProcessed: false,
             listOfSuggestions: [],
         };
     }
@@ -28,10 +41,10 @@ class mainPage extends Component {
                 "Content-Type": "application/json"
             }
         })
-            .then(r =>  r.json().then(data => ({status: r.status, body: data})))
+            .then(r => r.json().then(data => ({ status: r.status, body: data })))
             .then(response => {
                 this.setState({
-                    data  : response.body.humanRessources,
+                    data: response.body.humanRessources,
                     skills: response.body.skills
                 });
             })
@@ -42,24 +55,25 @@ class mainPage extends Component {
         this.setState({ displayMobile: window.innerWidth <= 760 });
     }
 
-    updateRole(event, index){
-        const dataKeys    = Object.keys(this.state.data);
+    updateRole(event, index) {
+        event.preventDefault();
+        const dataKeys = Object.keys(this.state.data);
         const selectedKey = dataKeys[index]
-        const skills      = this.state.data[selectedKey]
-        const skillsBool  = new Array( skills.length ).fill(false)
-
+        const skills = this.state.data[selectedKey]
+        const skillsBool = new Array(skills.length).fill(false)
         this.setState({
-            data:              this.state.data,
-            roleSelection:     index,
-            skillsSelection:   skillsBool,
-            location:          this.state.location,
-            requestProcessed:  this.state.requestProcessed,
+            data: this.state.data,
+            roleSelection: index,
+            skillsSelection: skillsBool,
+            location: this.state.location,
+            requestProcessed: this.state.requestProcessed,
             listOfSuggestions: this.state.listOfSuggestions
         })
-
     }
 
-    updateSkills(skills, index){
+    updateSkills(skills, index) {
+        event.preventDefault();
+
         skills[index] = !skills[index]
         this.setState({
             skillsSelection: skills,
@@ -68,6 +82,8 @@ class mainPage extends Component {
     }
 
     updateElement(event) {
+        event.preventDefault();
+
         const { id, value } = event.target;
         this.setState({ [id]: value });
     }
@@ -82,10 +98,10 @@ class mainPage extends Component {
             },
             body: JSON.stringify(this.state)
         })
-            .then(r =>  r.json().then(data => ({status: r.status, body: data})))
+            .then(r => r.json().then(data => ({ status: r.status, body: data })))
             .then(response => {
                 this.setState({
-                    requestProcessed : true,
+                    requestProcessed: true,
                     listOfSuggestions: response.body
                 });
             })
@@ -95,106 +111,115 @@ class mainPage extends Component {
     render() {
 
         const { data, skills, location, roleSelection, skillsSelection } = this.state;
-        const roles       = Object.keys(data);
+        const roles = Object.keys(data);
         const skills_keys = Object.keys(skills);
 
         return (
-            <React.Fragment>
-                <PageContainer>
-                    <PageWrapper>
-                        <Section2>
+            <PageContainer>
+                <PageWrapper>
+                    <TitleContainer>
+                        <HeroTitle>WAYN-COVID19: Where Am I Needed.</HeroTitle>
+                    </TitleContainer>
+                    <SplashText>Application de mise en contact des professionnels de santé disponibles pour aider à l’effort sanitaire dans le cadre de l’épidémie de Covid-19</SplashText>
 
-                            <HeroTitle>WAYN-COVID19: Where Am I Needed.</HeroTitle>
+                    <Section1>
+                        <ContactForm onSubmit={event => this.handleSubmit(event)}>
+                            <ContactFormWrapper>
+                                <ChoiceContainer>
+                                    <BoxChoice border={this.state.Profession == 'Médical'} onClick={() => this.setState({ Profession: 'Médical' })} >Je suis <br /> professionnel médical</BoxChoice>
+                                    <BoxChoice border={this.state.Profession == 'Paramédical'} onClick={() => this.setState({ Profession: 'Paramédical' })}>Je suis <br /> professionnel paramédical</BoxChoice>
+                                    <BoxChoice border={this.state.Profession == 'Autre'} onClick={() => this.setState({ Profession: 'Autre' })} >Je suis <br /> professionnel autre</BoxChoice>
+                                </ChoiceContainer>
 
-                            <SplashText>Cette application a pour objectif de coordonner l'effort médical contre le COVID19 sur tout le territoire français. Si vous êtes secouriste, interne ou médecin spécialisé, nous vous indiquons où vos compétences peuvent être utiles.</SplashText>
+                                {/* <Label>Vous êtes ici en tant que:</Label>
+                                {roles.map((value, index) => {
+                                    return <CheckboxContanier key={index}>
+                                        <Checkbox
+                                            name="branch1"
+                                            checked={roleSelection == index}
+                                            onChange={e => this.updateRole(e, index)}
+                                        />
+                                        <CheckboxLabel>{value}</CheckboxLabel>
+                                    </CheckboxContanier>
+                                })} */}
 
-                            <ContactForm onSubmit={event => this.handleSubmit(event)}>
 
-                                <FormRow>
-                                    <Label>Vous êtes ici en tant que:</Label>
-                                    {roles.map( (value, index) => {
-                                        return <div key={index}>
-                                            <input
-                                                type="radio"
-                                                name="branch1"
-                                                checked={roleSelection==index}
-                                                onChange={ e=> this.updateRole(e, index) }
-                                            />
-                                            <label>{value}</label>
-                                            </div>
-                                    })}
-
-                                    <Label>Vous êtes capables de:</Label>
-                                    {(roleSelection>=0) &&
-                                      data[roles[roleSelection]].map( (value, index) => {
-                                        return <div key={index}>
-                                            <input
-                                                type="checkbox"
+                                {/* <Label>Vous êtes capables de:</Label>
+                                {(roleSelection >= 0) &&
+                                    data[roles[roleSelection]].map((value, index) => {
+                                        return <CheckboxContanier key={index}>
+                                            <Checkbox
                                                 name="branch2"
                                                 checked={skillsSelection[index]}
-                                                onChange={ e=> this.updateSkills(skillsSelection, index) }
+                                                onChange={e => this.updateSkills(skillsSelection, index)}
                                             />
-                                            <label>{value}</label>
-                                            </div>
-                                    })}
+                                            <CheckboxLabel>{value}</CheckboxLabel>
+                                        </CheckboxContanier>
+                                    })} */}
 
-                                    <Label>Plus précisément:</Label>
-                                    {skills_keys.map( (value, index) => {
+                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} >
+
+
+                                    <Label>Mes compétences</Label>
+                                    {skills_keys.map((value, index) => {
                                         return <div key={index}>
-                                            <label>{value}</label>
-                                            {skills[value].map( (value2, index2)=> {
-                                                return <div key={index2}>
-                                                    <input
-                                                        type="checkbox"
+                                            <SecondaryLabel>{value}</SecondaryLabel>
+                                            {skills[value].map((value2, index2) => {
+                                                return <CheckboxContanier key={index2}>
+                                                    <Checkbox
                                                         name="branch2"
                                                         checked={skillsSelection[index]}
-                                                        onChange={ e=> this.updateSkills(skillsSelection, index) }
+                                                        onChange={e => this.updateSkills(skillsSelection, index)}
                                                     />
-                                                    <label>{value2}</label>
-                                                </div>
+                                                    <CheckboxLabel>{value2}</CheckboxLabel>
+                                                </CheckboxContanier>
                                             })
                                             }
-                                            </div>
+                                        </div>
                                     })}
+                                </Displayer>
+                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }}>
 
                                     <Label>Position approximative:</Label>
-
                                     <ContactInput
                                         type="text"
                                         id="location"
                                         aria-describedby="locationHelp"
                                         value={this.state.location}
-                                        placeholder="Adresse *"
+                                        placeholder="Code postal *"
                                         onChange={event => this.updateElement(event)}
                                     />
-                                </FormRow>
+                                </Displayer>
 
-                                <button type="submit" className="btn btn-mail">
+
+
+                                <button style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} type="submit" className="btn btn-mail">
                                     Où devrais-je me rendre?
                                     </button>
                                 {this.state.requestProcessed && (
-                                    this.state.listOfSuggestions.length==0 ? 
-                                    // Either no suggestion found
-                                    <div>
-                                    <h5 className="success-message">
-                                    Désolé. Nous ne référençons aucune demande en urgence qui requiert votre attention.
+                                    this.state.listOfSuggestions.length == 0 ?
+                                        // Either no suggestion found
+                                        <div>
+                                            <h5 className="success-message">
+                                                Désolé. Nous ne référençons aucune demande en urgence qui requiert votre attention.
                                     </h5>
-                                    <h5 className="success-message">
-                                    Vous pouvez remplir le formulaire de recensement.
+                                            <h5 className="success-message">
+                                                Vous pouvez remplir le formulaire de recensement.
                                     </h5>
-                                    </div>
-                                    :
-                                    // Or use a mapping of the list found
-                                    this.state.listOfSuggestions.map( (value, index) => {
-                                        return JSON.stringify(value)
-                                    })
+                                        </div>
+                                        :
+                                        // Or use a mapping of the list found
+                                        this.state.listOfSuggestions.map((value, index) => {
+                                            return JSON.stringify(value)
+                                        })
                                 )}
-                            </ContactForm>
-                        </Section2>
-                    </PageWrapper>
-                </PageContainer>
-            </React.Fragment>
 
+
+                            </ContactFormWrapper>
+                        </ContactForm>
+                    </Section1>
+                </PageWrapper>
+            </PageContainer>
         );
     }
 }
@@ -203,13 +228,10 @@ export default mainPage;
 
 const PageContainer = styled.div`
 width: 100vw;
+margin-bottom: 50px;
 `
-
-// -----------------------------------------------------
-// -----------------------------------------------------
-// -----------------------------------------------------
-
 const PageWrapper = styled.div`
+margin-top: 150px;
 width: 100%;
 height: 100%;
 display: flex;
@@ -217,60 +239,51 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 `
+// ---------------------------------------------------
+// ---------------------------------------------------
 
-const Section2 = styled.section`
+
+const TitleContainer = styled.div`
+width: 100vw;
+height: 100px;
+z-index: 3;
+position: fixed;
+top: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+background-color: var(--bleu-officiel);
+`
+
+const HeroTitle = styled.h3`
+width: 80%;
+margin: 20px;
+color: white;
+`
+
+const SplashText = styled.h5`
+width: 80%;
+color: black;
+text-align: center;
+`
+
+
+// ---------------------------------------------------
+// ---------------------------------------------------
+
+const Section1 = styled.section`
 width: 100%;
-padding: 5%;
+margin-top: 50px;
 display: flex;
 flex-direction: column;
-background-color: #f2f2ed;
 align-items: center;
 @media (max-width: 768px){
 width: 100%;
 }
 `
 
-const HeroTitle = styled.div`
-width: 50%;
-height: 50px;
-margin: 5px;
-padding-left: 15px;
-padding-bottom: 40px;
-
-font-family: Baskerville;
-font-size: 30px;
-font-weight: normal;
-font-stretch: normal;
-font-style: normal;
-line-height: 1.06;
-letter-spacing: normal;
-color: var(--dark-blue-grey);
-opacity: 1.0;
-@media (max-width: 768px){
-width: 85%;
-}
-`
-
-const SplashText = styled.div`
-width: 50%;
-height: 50px;
-margin: 5px;
-padding-left: 15px;
-padding-bottom: 40px;
-
-font-family: Baskerville;
-font-size: 20px;
-font-weight: normal;
-font-stretch: normal;
-font-style: normal;
-line-height: 1.06;
-letter-spacing: normal;
-color: var(--dark-blue-grey);
-opacity: 1.0;
-@media (max-width: 768px){
-width: 85%;
-}
-`
+// ---------------------------------------------------
+// ---------------------------------------------------
 
 const ContactForm = styled.form`
 width: 100%;
@@ -279,36 +292,72 @@ flex-direction: column;
 align-items: center;
 `
 
-const FormRow = styled.div`
-width: 100%;
+const ContactFormWrapper = styled.div`
+width: 60%;
 display: flex;
 flex-direction: column;
-justify-content: center;
-align-items: center;
-padding-bottom: 50px;
-@media (max-width: 768px){
-width: 100%;
-flex-direction: column;
-}
 `
 
-const Label = styled.div`
-width: 50%;
-padding-left: 15px;
-padding-top : 15px;
+// ---------------------------------------------------
+// ---------------------------------------------------
 
-font-family: Averta;
-font-size: 20px;
+const ChoiceContainer = styled.div`
+display: flex;
+justify-content: space-evenly;
+margin-bottom: 30px;
+`
+
+const BoxChoice = styled.div`
+width: 220px;
+height: 220px;
+border: 3px solid var(--bleu-officiel);
+color: ${props => props.border ? "white" : "black"};
+background-color:  ${props => props.border ? "var(--bleu-officiel)" : "white"};
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+text-align: center;
+font-family: 'Roboto', sans-serif;
+font-size: 17px;
 font-weight: normal;
-font-stretch: normal;
 font-style: normal;
-line-height: 1.06;
+font-stretch: normal;
+line-height: 1.29;
 letter-spacing: normal;
-color: var(--dark-blue-grey);
-opacity: 0.8;
-@media (max-width: 768px){
-width: 85%;
-}
+`
+
+// ---------------------------------------------------
+// ---------------------------------------------------
+
+const Displayer = styled.div`
+width: 100%;
+border: 2px solid var(--bleu-officiel);
+padding: 40px;
+border-radius: 10px;
+margin-top: 30px;
+`
+
+// ---------------------------------------------------
+// ---------------------------------------------------
+
+const Label = styled.h3`
+text-align: left;
+margin: 15px 0;
+color: black;
+font-weight: bold;
+`
+
+const SecondaryLabel = styled.h3`
+text-align: left;
+font-family: Averta-Bold;
+font-size: 17px;
+font-weight: normal;
+font-style: normal;
+font-stretch: normal;
+line-height: 1.29;
+letter-spacing: normal;
+margin: 10px 0;
 `
 
 const ContactInput = styled.input`
@@ -333,4 +382,18 @@ opacity: 0.4;
 width: 85%;
 }
 `
-
+const CheckboxLabel = styled.label`
+font-family: 'Roboto', sans-serif;
+font-size: 17px;
+font-weight: normal;
+font-style: normal;
+font-stretch: normal;
+line-height: 1.29;
+letter-spacing: normal;
+margin-left: 10px;
+`
+const CheckboxContanier = styled.div`
+display: flex;
+margin: 5px;
+background-color: #f2f6fa;
+`
