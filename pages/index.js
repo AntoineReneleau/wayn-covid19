@@ -302,6 +302,10 @@ const ContactFormWrapper = styled.div`
 width: 60%;
 display: flex;
 flex-direction: column;
+@media (max-width: 768px){
+width: 100%;
+padding: 10px;
+}
 `
 
 // ---------------------------------------------------
@@ -332,6 +336,9 @@ font-style: normal;
 font-stretch: normal;
 line-height: 1.29;
 letter-spacing: normal;
+@media (max-width: 768px){
+height: 200px;
+}
 `
 
 // ---------------------------------------------------
@@ -344,6 +351,9 @@ padding: 40px;
 background-color: #f2f6faad;
 border-radius: 5px;
 margin-top: 30px;
+@media (max-width: 768px){
+padding: 10px;
+}
 `
 
 // ---------------------------------------------------
