@@ -2,18 +2,6 @@ import React, { Component } from 'react';
 import styled from "styled-components";
 import { Checkbox } from 'antd';
 
-const Job = [
-    'Anesthésiste-réanimateur exerçant en réanimation médicale',
-    'Cardiologue/pneumologue en USIC',
-    'Autre spécialité exerçant en USC',
-    'Cardiologue (exerçant en service conventionnel)',
-    'Pneumologue (exerçant en service conventionnel)',
-    'Infectiologue',
-    'Médecin généraliste',
-    'Autre spécialité en service conventionnel ou ambulatoire'
-]
-
-
 class mainPage extends Component {
     constructor(props) {
         super(props);
@@ -52,8 +40,9 @@ class mainPage extends Component {
                 }
                 this.setState({
                     data: response.body.humanRessources,
+                    jobs: response.body.jobs,
                     skills: skills,
-                    skillsSelection: skillsSelection
+                    skillsSelection: skillsSelection, 
                 });
             })
             .catch(err => console.log("Problem in fetching data from API", err));
@@ -120,7 +109,7 @@ class mainPage extends Component {
 
     render() {
 
-        const { data, skills, location, roleSelection, skillsSelection } = this.state;
+        const { data, jobs, skills, location, roleSelection, skillsSelection } = this.state;
         const roles = Object.keys(data);
         const skills_keys = Object.keys(skills);
 
@@ -176,6 +165,15 @@ class mainPage extends Component {
                                         </CheckboxContanier>
                                     })} */}
 
+                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} >
+                                    <Label>Plus précisément, je suis:</Label>
+                                    {jobs && jobs['Médical'].map((value, index) => {
+                                        return <Block key={index}>
+                                            <SecondaryLabel>{value}</SecondaryLabel>
+                                        </Block>
+                                    })}
+                                </Displayer>
+                                
                                 <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} >
                                     <Label>Mes compétences</Label>
                                     {skills_keys.map((value, index) => {

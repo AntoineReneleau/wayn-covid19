@@ -11,6 +11,7 @@ Airtable.configure({
 var base = Airtable.base(process.env.AIRTABLE_BASE);
 var humanRessources = {};
 var skills = {};
+var jobs   = {};
 
 base('Ressources humaines').select({
     // Selecting the 3 only records in Grid view:
@@ -63,6 +64,30 @@ base('Compétences').select({
     if (err) { console.error(err); return; }
 });
 
+base('Jobs').select({
+    // Selecting the 3 only records in Grid view:
+    maxRecords: 300,
+    view: "Grid view"
+}).eachPage(function page(records, fetchNextPage) {
+    // This function (`page`) will get called for each page of records.
+    records.forEach(function (record) {
+        const keys = Object.keys( record.fields )
+        for( let key of keys){
+            value = record.fields[key]
+            if(jobs[key] == undefined){
+                jobs[key] = []    
+            }
+            jobs[key].push(value)
+        }
+    });
+    // To fetch the next page of records, call `fetchNextPage`.
+    // If there are more records, `page` will get called again.
+    // If there are no more records, `done` will get called.
+    fetchNextPage();
+}, function done(err) {
+    if (err) { console.error(err); return; }
+});
+
 router.get("/ressources", (req, res, next) => {
     // Send back ressources found on Airtable
     // console.log()
@@ -71,6 +96,7 @@ router.get("/ressources", (req, res, next) => {
     // console.log(humanRessources)
     res.json({
         humanRessources: humanRessources,
+        jobs  : jobs,
         skills: skills   
     })
     //
