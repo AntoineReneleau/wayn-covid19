@@ -132,8 +132,8 @@ class mainPage extends Component {
                         </Displayer>
                     </Section1>
 
-                    <Section1 style={{ display: this.state.visitorType == 'Médical' ? 'block' : 'none' }}>
-                        <Displayer>
+                    <Section2 style={{ display: this.state.visitorType == 'Médical' ? 'block' : 'none' }}>
+                        {/* <Displayer> */}
                         <iframe src="https://airtable.com/embed/shr96cS9bBW60fEgc?backgroundColor=red"
                                 style={{className:    "airtable-embed airtable-dynamic-height",
                                         frameboder:   "0",
@@ -144,8 +144,8 @@ class mainPage extends Component {
                                         height:       "100%"
                                     }}>
                         </iframe>
-                        </Displayer>
-                    </Section1>
+                        {/* </Displayer> */}
+                    </Section2>
 
                 </PageWrapper>
             </PageContainer>
@@ -220,6 +220,7 @@ const BoxChoice0 = styled.div`
 width: 480px;
 height: 240px;
 padding: 10px;
+margin-right: 20px;
 border: 3px solid var(--bleu-officiel);
 color: ${props => props.border ? "white" : "var(--bleu-officiel)"};
 background-color:  ${props => props.border ? "var(--bleu-officiel)" : "white"};
@@ -248,6 +249,21 @@ margin-bottom: 10px;
 const Section1 = styled.section`
 width: 60%;
 margin-top: 50px;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+@media (max-width: 768px){
+width: 100%;
+margin-top: 20px;
+}
+`
+
+const Section2 = styled.section`
+width: 60%;
+margin-top: 50px;
+margin-right: 20px;
+height: 2500px;
 display: flex;
 flex-direction: column;
 align-items: center;
