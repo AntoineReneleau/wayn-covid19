@@ -26,18 +26,18 @@ nextApp.prepare().then(() => {
 
     // app.use(cors())
 
-    app.use(cors({
-        //allow other domains/origins to send cookies
-        credentials: true,
-        // this is the domain we want cookies from (our React App)
-        origin: ["http://localhost:3000"]
-    }));
+    // app.use(cors({
+    //     //allow other domains/origins to send cookies
+    //     credentials: true,
+    //     // this is the domain we want cookies from (our React App)
+    //     origin: ["http://localhost:3000"]
+    // }));
 
     app.use('/api', require('./routes/users'));
 
 
     mongoose
-        .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+        .connect(process.env.MONGODB_URI, { useUnifiedTopology:true, useNewUrlParser: true })
         .then(x => {
             console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
         })
