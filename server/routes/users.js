@@ -157,6 +157,21 @@ router.post("/users", (req, res, next) => {
         .catch(err => next(err));
 });
 
+router.get("/users-fetch", (req, res, next) => {
+    // Users.find()
+    //     .then(response => {
+    //         res.json(response);
+    //     })
+    //     .catch(err => next(err))
+    const { firstName } = req.body;
+    // console.log('firstName', firstName);
+    // console.log('req.body', req.body);
+    Users.create({ Name: firstName, Fonction: fonction, Mail: email })
+        .then(console.log("created element in the database")
+        )
+        .catch(err => next(err));
+});
+
 
 
 module.exports = router;
