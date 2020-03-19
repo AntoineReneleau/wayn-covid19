@@ -3,10 +3,13 @@ import styled from "styled-components";
 import { Checkbox } from 'antd';
 
 class mainPage extends Component {
+
     constructor(props) {
         super(props);
 
         this.state = {
+            visitorType: "",
+            //
             data: {},
             skills: {},
             roleSelection: -1,
@@ -20,6 +23,15 @@ class mainPage extends Component {
     componentDidMount() {
         window.addEventListener("resize", this.resize.bind(this));
         this.resize();
+        //
+        if (typeof window !== 'undefined'){
+            const script = document.createElement("script");
+     
+            script.src   = "https://static.airtable.com/js/embed/embed_snippet_v1.js";
+            script.async = true;
+            
+            document.body.appendChild(script);    
+        }
         //
         //Fetching ressources data from API
         const rawResponse = fetch(`${process.env.API_URL}/ressources`, {
@@ -50,34 +62,6 @@ class mainPage extends Component {
 
     resize() {
         this.setState({ displayMobile: window.innerWidth <= 760 });
-    }
-
-    // updateRole(event, index) {
-    //     event.preventDefault();
-    //     const dataKeys = Object.keys(this.state.data);
-    //     const selectedKey = dataKeys[index]
-    //     const skills = this.state.data[selectedKey]
-    //     const skillsBool = new Array(skills.length).fill(false)
-
-    //     this.setState({
-    //         data: this.state.data,
-    //         roleSelection: index,
-    //         skillsSelection: skillsBool,
-    //         location: this.state.location,
-    //         requestProcessed: this.state.requestProcessed,
-    //         listOfSuggestions: this.state.listOfSuggestions
-    //     })
-    // }
-
-    updateSkills(event, value, index) {
-        event.preventDefault();
-        // Changing state requires a copy
-        let skillsSelection = Object.assign({}, this.state.skillsSelection)
-        skillsSelection[value][index] = !skillsSelection[value][index]
-        this.setState({
-            skillsSelection: skillsSelection,
-            ...this.state
-        })
     }
 
     updateElement(event) {
@@ -117,120 +101,52 @@ class mainPage extends Component {
             <PageContainer>
                 <PageWrapper>
                     <TitleContainer>
-                        <HeroTitle>WAYN-COVID19: Where Am I Needed.</HeroTitle>
+                        <HeroTitle>COVID19: Où a-t-on besoin de médecins?</HeroTitle>
                     </TitleContainer>
-                    <SplashText>Application de mise en contact des professionnels de santé disponibles pour aider à l’effort sanitaire dans le cadre de l’épidémie de Covid-19</SplashText>
+                    <SplashText>Confronté à l'épidémie du COVID-19, le corps médical français doit se coordonner pour mieux faire face et gérer l'effort dans la durée.</SplashText>
 
-                    <Section1>
-                        <ContactForm onSubmit={event => this.handleSubmit(event)}>
-                            <ContactFormWrapper>
-                                <ChoiceContainer>
-                                    <BoxChoice
-                                        border={this.state.Profession == 'Médical'}
-                                        onClick={() => this.setState({ Profession: 'Médical' })}>Je suis <br /> professionnel médical</BoxChoice>
-                                    <BoxChoice
-                                        border={this.state.Profession == 'Paramédical'}
-                                        onClick={() => this.setState({ Profession: 'Paramédical' })}>Je suis <br /> professionnel paramédical</BoxChoice>
-                                    <BoxChoice
-                                        border={this.state.Profession == 'Autre'}
-                                        onClick={() => this.setState({ Profession: 'Autre' })} >Je suis <br /> professionnel autre</BoxChoice>
+                    <Section0>
+                        <ChoiceContainer>
+                            <BoxChoice0
+                                border={this.state.visitorType == 'Médical'}
+                                onClick={() => this.setState({ visitorType: 'Médical' })}>
+                                    Je suis professionnel médical, <br /> 
+                                    volontaire à une garde.
+                            </BoxChoice0>
+                            <BoxChoice0
+                                border={this.state.visitorType == 'Référent'}
+                                onClick={() => this.setState({ visitorType: 'Référent' })}>
+                                    Je suis chef de service ou référent d'un service hospitalier. <br /> 
+                                    Nous sommes sous pression et nous avons besoin de professionnels volontaires.
+                            </BoxChoice0>
 
-                                    {this.state.displayMobile && this.state.Profession == 'Médical' && <Image src="/static/images/down.png" alt="down" />}
+                            {this.state.displayMobile && this.state.Profession == 'Médical' && <Image src="/static/images/down.png" alt="down" />}
+                        </ChoiceContainer>                        
+                    </Section0>
 
-                                </ChoiceContainer>
-
-                                {/* <Label>Vous êtes ici en tant que:</Label>
-                                {roles.map((value, index) => {
-                                    return <CheckboxContanier key={index}>
-                                        <Checkbox
-                                            name="branch1"
-                                            checked={roleSelection == index}
-                                            onChange={e => this.updateRole(e, index)}
-                                        />
-                                        <CheckboxLabel>{value}</CheckboxLabel>
-                                    </CheckboxContanier>
-                                })} */}
-
-
-                                {/* <Label>Vous êtes capables de:</Label>
-                                {(roleSelection >= 0) &&
-                                    data[roles[roleSelection]].map((value, index) => {
-                                        return <CheckboxContanier key={index}>
-                                            <Checkbox
-                                                name="branch2"
-                                                checked={skillsSelection[index]}
-                                                onChange={e => this.updateSkills(skillsSelection, index)}
-                                            />
-                                            <CheckboxLabel>{value}</CheckboxLabel>
-                                        </CheckboxContanier>
-                                    })} */}
-
-                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} >
-                                    <Label>Plus précisément, je suis:</Label>
-                                    {jobs && jobs['Médical'].map((value, index) => {
-                                        return <Block key={index}>
-                                            <SecondaryLabel>{value}</SecondaryLabel>
-                                        </Block>
-                                    })}
-                                </Displayer>
-                                
-                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} >
-                                    <Label>Mes compétences</Label>
-                                    {skills_keys.map((value, index) => {
-                                        return <Block key={index}>
-                                            <SecondaryLabel>{value}</SecondaryLabel>
-                                            {skills[value].map((value2, index2) => {
-                                                return <CheckboxContanier key={index2}>
-                                                    <Checkbox
-                                                        name="branch2"
-                                                        checked={skillsSelection[value][index2]}
-                                                        onChange={e => this.updateSkills(e, value, index2)}
-                                                    />
-                                                    <CheckboxLabel>{value2}</CheckboxLabel>
-                                                </CheckboxContanier>
-                                            })
-                                            }
-                                        </Block>
-                                    })}
-                                </Displayer>
-
-                                <Displayer style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }}>
-                                    <Label>Position approximative:</Label>
-                                    <ContactInput
-                                        type="text"
-                                        id="location"
-                                        aria-describedby="locationHelp"
-                                        value={this.state.location}
-                                        placeholder="Code postal *"
-                                        onChange={event => this.updateElement(event)}
-                                    />
-                                </Displayer>
-
-
-                                <button style={{ display: this.state.Profession == 'Médical' ? 'block' : 'none' }} type="submit" className="btn btn-mail">
-                                    Où devrais-je me rendre?
-                                    </button>
-                                {this.state.requestProcessed && (
-                                    this.state.listOfSuggestions.length == 0 ?
-                                        // Either no suggestion found
-                                        <div>
-                                            <h5 className="success-message">
-                                                Désolé. Nous ne référençons aucune demande en urgence qui requiert votre attention.
-                                    </h5>
-                                            <h5 className="success-message">
-                                                Vous pouvez remplir le formulaire de recensement.
-                                    </h5>
-                                        </div>
-                                        :
-                                        // Or use a mapping of the list found
-                                        this.state.listOfSuggestions.map((value, index) => {
-                                            return JSON.stringify(value)
-                                        })
-                                )}
-
-                            </ContactFormWrapper>
-                        </ContactForm>
+                    <Section1 style={{ display: this.state.visitorType == 'Référent' ? 'block' : 'none' }}>
+                        <Displayer >
+                            <Label>Contactez les volontaires proches de vous sur 
+                                <a href='https://airtable.com/universe/exp5fcFCp8McPcfNB/corps-medical-recensement-de-volontaires'> ce lien-ci.</a>
+                            </Label>
+                        </Displayer>
                     </Section1>
+
+                    <Section1 style={{ display: this.state.visitorType == 'Médical' ? 'block' : 'none' }}>
+                        <Displayer>
+                        <iframe src="https://airtable.com/embed/shr96cS9bBW60fEgc?backgroundColor=red"
+                                style={{className:    "airtable-embed airtable-dynamic-height",
+                                        frameboder:   "0",
+                                        background:   "transparent",
+                                        border:       "1px solid #ccc",
+                                        onmousewheel: "",
+                                        width:        "100%",
+                                        height:       "100%"
+                                    }}>
+                        </iframe>
+                        </Displayer>
+                    </Section1>
+
                 </PageWrapper>
             </PageContainer>
         );
@@ -269,27 +185,68 @@ background-color: var(--bleu-officiel);
 `
 
 const HeroTitle = styled.h3`
-width: 80%;
+width: 60%;
 margin: 20px;
 color: white;
 
 `
 
 const SplashText = styled.h5`
-width: 80%;
-color: #0b6ba8;
+width: 60%;
+//color: #0b6ba8;
+color: black;
 text-align: center;
 @media (max-width: 768px){
     font-size: 20px;
 }
 `
 
+// ---------------------------------------------------
+// ---------------------------------------------------
+
+const Section0 = styled.section`
+width: 100%;
+margin-top: 50px;
+display: flex;
+flex-direction: column;
+align-items: center;
+@media (max-width: 768px){
+width: 100%;
+margin-top: 20px;
+}
+`
+
+const BoxChoice0 = styled.div`
+width: 480px;
+height: 240px;
+padding: 10px;
+border: 3px solid var(--bleu-officiel);
+color: ${props => props.border ? "white" : "var(--bleu-officiel)"};
+background-color:  ${props => props.border ? "var(--bleu-officiel)" : "white"};
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+text-align: center;
+font-family: 'Roboto', sans-serif;
+font-size: 17px;
+font-weight: normal;
+font-style: normal;
+font-stretch: normal;
+line-height: 1.29;
+letter-spacing: normal;
+@media (max-width: 768px){
+height: 100px;
+width: 95%;
+margin-bottom: 10px;
+}
+`
 
 // ---------------------------------------------------
 // ---------------------------------------------------
 
 const Section1 = styled.section`
-width: 100%;
+width: 60%;
 margin-top: 50px;
 display: flex;
 flex-direction: column;
