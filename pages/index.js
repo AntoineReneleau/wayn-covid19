@@ -167,6 +167,9 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
+@media (max-width: 768px){
+    margin-top: 200px;
+}
 `
 // ---------------------------------------------------
 // ---------------------------------------------------
@@ -182,6 +185,9 @@ display: flex;
 justify-content: center;
 align-items: center;
 background-color: var(--bleu-officiel);
+@media (max-width: 768px){
+height: 150px;
+}
 `
 
 const HeroTitle = styled.h3`
@@ -237,9 +243,10 @@ font-stretch: normal;
 line-height: 1.29;
 letter-spacing: normal;
 @media (max-width: 768px){
-height: 100px;
 width: 95%;
 margin-bottom: 10px;
+margin-right: 0px;
+
 }
 `
 
@@ -254,7 +261,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 @media (max-width: 768px){
-width: 100%;
+width: 95%;
 margin-top: 20px;
 }
 `
@@ -270,6 +277,7 @@ align-items: center;
 @media (max-width: 768px){
 width: 100%;
 margin-top: 20px;
+margin-right: 0px;
 }
 `
 
